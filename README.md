@@ -13,7 +13,32 @@ Sistema web para el registro y seguimiento de incidencias en la vía pública (b
 | Archivos | Multipart/form-data — imágenes, video, audio |
 | Orquestación | Docker Compose |
 
-## Arquitectura y Patrones de Diseño
+## Arquitectura
+
+Cliente-Servidor de 3 capas:
+
+```
+[NAVEGADOR]
+    |  HTTP
+    v
+[FRONTEND — React + Vite :5173]
+    |  Axios REST calls
+    v
+[BACKEND — Fastify :5000]
+    ├── routes/        → endpoints y schema Swagger
+    ├── middleware/    → autenticación (requireOperator)
+    ├── controllers/   → lógica de negocio
+    ├── repositories/  → acceso a datos (Repository Pattern)
+    ├── factories/     → creación de objetos (Factory Pattern)
+    └── models/        → esquemas Mongoose (MVC)
+    |  Mongoose ODM
+    v
+[MONGODB ATLAS — incidencias_db]
+    ├── incidents
+    └── users
+```
+
+## Patrones de Diseño
 
 - **Repository Pattern** — `incidentRepository.js`, `userRepository.js`: capa de acceso a datos desacoplada del controlador
 - **Factory Pattern** — `incidentFactory.js`: centraliza la creación de incidencias con prioridad automática según categoría
@@ -64,28 +89,52 @@ docker compose up --build -d
 | Backend API | http://localhost:5000 |
 | Swagger UI | http://localhost:5000/api-docs |
 
+## Autenticación
+
+La aplicación es de uso **público**: cualquier ciudadano puede reportar y consultar incidencias sin cuenta.
+
+La ruta `/manage` está **protegida**: requiere login con rol `operador` o `admin`.
+
+### Login (`POST /api/auth/login`)
+
+```json
+{ "email": "operador1@incidencias.pe", "password": "operador123" }
+```
+
+### Cuentas de prueba
+
+| Rol | Email | Contraseña |
+|-----|-------|-----------|
+| Operador | operador1@incidencias.pe | operador123 |
+| Admin | admin@incidencias.pe | admin123 |
+| Ciudadano (sin acceso al panel) | juan@gmail.com | ciudadano123 |
+
 ## Endpoints API
 
-| Método | Ruta | Descripción |
-|--------|------|-------------|
-| GET | `/api/incidents` | Listar incidencias (filtros: category, status, priority) |
-| POST | `/api/incidents` | **Crear incidencia** — multipart/form-data (soporta imagen, video, audio) |
-| GET | `/api/incidents/stats` | Estadísticas por categoría y estado |
-| GET | `/api/incidents/:id` | Detalle de incidencia |
-| PATCH | `/api/incidents/:id/status` | Actualizar estado |
-| POST | `/api/incidents/:id/media` | Adjuntar archivo a incidencia existente |
-| DELETE | `/api/incidents/:id` | Eliminar incidencia |
-| GET | `/api/users` | Listar usuarios |
-| POST | `/api/users` | Registrar usuario |
-| GET | `/api/users/operators` | Listar operadores |
+| Método | Ruta | Auth | Descripción |
+|--------|------|------|-------------|
+| POST | `/api/auth/login` | No | Login con email + contraseña |
+| GET | `/api/incidents` | No | Listar incidencias (filtros: category, status, priority) |
+| POST | `/api/incidents` | No | **Crear incidencia** — multipart/form-data (soporta imagen, video, audio) |
+| GET | `/api/incidents/stats` | No | Estadísticas por categoría y estado |
+| GET | `/api/incidents/:id` | No | Detalle de incidencia |
+| PATCH | `/api/incidents/:id/status` | **Sí** (header `x-user-email`) | Actualizar estado |
+| POST | `/api/incidents/:id/media` | No | Adjuntar archivo a incidencia existente |
+| DELETE | `/api/incidents/:id` | No | Eliminar incidencia |
+| GET | `/api/users` | No | Listar usuarios |
+| POST | `/api/users` | No | Registrar usuario |
+| GET | `/api/users/operators` | No | Listar operadores |
 
 ## Workflow GitFlow
 
 ```
-main ←── release ←── develop ←── feature/us-001-reporte
-                              ←── feature/us-002-consulta
-                              ←── feature/us-003-gestion-estado
+main ←── develop
 ```
+
+| Rama | Descripción |
+|------|-------------|
+| `main` | Código estable de producción |
+| `develop` | Integración de funcionalidades — auth, UI y casos de uso |
 
 ## Estructura del proyecto
 
@@ -101,15 +150,17 @@ Incidencias_EP_Martel/
 │       ├── models/          # Mongoose schemas
 │       ├── repositories/    # Repository Pattern
 │       ├── factories/       # Factory Pattern
+│       ├── middleware/      # authMiddleware.js — preHandler requireOperator
 │       ├── controllers/     # Lógica de negocio
 │       ├── routes/          # Fastify routes + Swagger
 │       └── seed/            # Datos iniciales
 └── frontend/
     ├── Dockerfile
     └── src/
-        ├── services/api.js  # Axios client
-        ├── components/      # Navbar, IncidentCard
-        └── pages/           # Dashboard, Report, Detail, Manage
+        ├── services/        # api.js — Axios client
+        ├── context/         # AuthContext.jsx — estado de sesión en localStorage
+        ├── components/      # Navbar, IncidentCard, ProtectedRoute
+        └── pages/           # Dashboard, Report, Detail, Manage, Login
 ```
 
 ## Detener el sistema
