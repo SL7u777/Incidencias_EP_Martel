@@ -23,6 +23,7 @@ fastify.register(require('@fastify/swagger'), {
     },
     servers: [{ url: 'http://localhost:5000' }],
     tags: [
+      { name: 'auth', description: 'Autenticación de operadores' },
       { name: 'incidents', description: 'Gestión de incidencias' },
       { name: 'users', description: 'Gestión de usuarios' },
     ],
@@ -34,6 +35,7 @@ fastify.register(require('@fastify/swagger-ui'), {
   uiConfig: { docExpansion: 'list' },
 });
 
+fastify.register(require('./routes/auth'), { prefix: '/api/auth' });
 fastify.register(require('./routes/incidents'), { prefix: '/api/incidents' });
 fastify.register(require('./routes/users'), { prefix: '/api/users' });
 

@@ -66,7 +66,7 @@ function DashboardPage() {
         <select value={filters.status} onChange={e => setFilters({ ...filters, status: e.target.value })} style={{ padding: '8px 14px', borderRadius: '6px', border: '1.5px solid #cbd5e0', fontSize: '13px', backgroundColor: 'white' }}>
           {STATUSES.map(s => <option key={s} value={s}>{s ? s.replace('_', ' ') : 'Todos los estados'}</option>)}
         </select>
-        <button onClick={load} style={{ padding: '8px 16px', borderRadius: '6px', border: '1.5px solid #cbd5e0', backgroundColor: 'white', fontSize: '13px', cursor: 'pointer' }}>🔄 Actualizar</button>
+        <button onClick={load} style={{ padding: '8px 16px', borderRadius: '6px', border: '1.5px solid #cbd5e0', backgroundColor: 'white', fontSize: '13px', cursor: 'pointer' }}>Actualizar</button>
       </div>
 
       {loading ? (

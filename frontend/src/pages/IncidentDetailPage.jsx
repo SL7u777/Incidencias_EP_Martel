@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { incidentService } from '../services/api';
-import { CATEGORY_COLORS, STATUS_COLORS, PRIORITY_COLORS, CATEGORY_ICONS } from '../components/IncidentCard';
+import { CATEGORY_COLORS, STATUS_COLORS, PRIORITY_COLORS } from '../components/IncidentCard';
 
 function IncidentDetailPage() {
   const { id } = useParams();
@@ -29,10 +29,7 @@ function IncidentDetailPage() {
       <div style={{ backgroundColor: 'white', borderRadius: '12px', padding: '28px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', borderTop: `4px solid ${catColor}` }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '12px', marginBottom: '20px' }}>
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px' }}>
-              <span style={{ fontSize: '28px' }}>{CATEGORY_ICONS[incident.category]}</span>
-              <h1 style={{ fontSize: '20px', fontWeight: '800', color: '#0f172a' }}>{incident.title}</h1>
-            </div>
+            <h1 style={{ fontSize: '20px', fontWeight: '800', color: '#0f172a', marginBottom: '6px' }}>{incident.title}</h1>
             <span style={{ fontSize: '12px', backgroundColor: catColor + '22', color: catColor, padding: '3px 10px', borderRadius: '12px', fontWeight: '700', textTransform: 'uppercase' }}>
               {incident.category}
             </span>
@@ -41,7 +38,7 @@ function IncidentDetailPage() {
             <div style={{ fontSize: '13px', fontWeight: '700', backgroundColor: statusColor + '22', color: statusColor, padding: '5px 14px', borderRadius: '12px', textTransform: 'uppercase', marginBottom: '4px' }}>
               {incident.status.replace('_', ' ')}
             </div>
-            <div style={{ fontSize: '11px', color: PRIORITY_COLORS[incident.priority], fontWeight: '600' }}>⚡ Prioridad {incident.priority}</div>
+            <div style={{ fontSize: '11px', color: PRIORITY_COLORS[incident.priority], fontWeight: '600' }}>Prioridad {incident.priority}</div>
           </div>
         </div>
 
@@ -73,7 +70,7 @@ function IncidentDetailPage() {
                   ) : m.mimetype?.startsWith('audio/') ? (
                     <audio src={m.url} controls style={{ width: '220px' }} />
                   ) : (
-                    <a href={m.url} target="_blank" rel="noreferrer" style={{ fontSize: '12px', color: '#6366f1' }}>📎 {m.originalName}</a>
+                    <a href={m.url} target="_blank" rel="noreferrer" style={{ fontSize: '12px', color: '#6366f1' }}>{m.originalName}</a>
                   )}
                 </div>
               ))}

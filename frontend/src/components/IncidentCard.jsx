@@ -5,8 +5,6 @@ const CATEGORY_COLORS = { bache: '#f59e0b', alumbrado: '#6366f1', basura: '#10b9
 const STATUS_COLORS = { pendiente: '#f59e0b', en_proceso: '#3b82f6', resuelto: '#10b981', cerrado: '#6b7280' };
 const PRIORITY_COLORS = { baja: '#10b981', media: '#f59e0b', alta: '#ef4444', critica: '#dc2626' };
 
-const CATEGORY_ICONS = { bache: '🕳️', alumbrado: '💡', basura: '🗑️', seguridad: '🚨', emergencia: '🚒' };
-
 function IncidentCard({ incident }) {
   const navigate = useNavigate();
   return (
@@ -23,10 +21,7 @@ function IncidentCard({ incident }) {
       }}
     >
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px', marginBottom: '8px' }}>
-        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-          <span style={{ fontSize: '20px' }}>{CATEGORY_ICONS[incident.category]}</span>
-          <span style={{ fontSize: '14px', fontWeight: '700', color: '#1e293b' }}>{incident.title}</span>
-        </div>
+        <span style={{ fontSize: '14px', fontWeight: '700', color: '#1e293b' }}>{incident.title}</span>
         <span style={{ fontSize: '11px', fontWeight: '700', backgroundColor: STATUS_COLORS[incident.status] + '22', color: STATUS_COLORS[incident.status], padding: '3px 8px', borderRadius: '12px', whiteSpace: 'nowrap', textTransform: 'uppercase' }}>
           {incident.status.replace('_', ' ')}
         </span>
@@ -35,15 +30,15 @@ function IncidentCard({ incident }) {
         {incident.description}
       </p>
       <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: '#94a3b8' }}>
-        <span>📍 {incident.location?.district || incident.location?.address}</span>
-        <span style={{ color: PRIORITY_COLORS[incident.priority], fontWeight: '600' }}>⚡ {incident.priority}</span>
+        <span>{incident.location?.district || incident.location?.address}</span>
+        <span style={{ color: PRIORITY_COLORS[incident.priority], fontWeight: '600' }}>{incident.priority}</span>
       </div>
       {incident.media?.length > 0 && (
-        <div style={{ marginTop: '8px', fontSize: '11px', color: '#6366f1' }}>📎 {incident.media.length} archivo(s) adjunto(s)</div>
+        <div style={{ marginTop: '8px', fontSize: '11px', color: '#6366f1' }}>{incident.media.length} archivo(s) adjunto(s)</div>
       )}
     </div>
   );
 }
 
-export { CATEGORY_COLORS, STATUS_COLORS, PRIORITY_COLORS, CATEGORY_ICONS };
+export { CATEGORY_COLORS, STATUS_COLORS, PRIORITY_COLORS };
 export default IncidentCard;

@@ -2,9 +2,9 @@ const Incident = require('../models/Incident');
 const User = require('../models/User');
 
 const users = [
-  { name: 'Admin Sistema', email: 'admin@incidencias.pe', role: 'admin', district: 'Miraflores' },
-  { name: 'Operador Lima Centro', email: 'operador1@incidencias.pe', role: 'operador', district: 'Lima Centro' },
-  { name: 'Juan Pérez', email: 'juan@gmail.com', role: 'ciudadano', district: 'San Isidro' },
+  { name: 'Admin Sistema', email: 'admin@incidencias.pe', password: 'admin123', role: 'admin', district: 'Miraflores' },
+  { name: 'Operador Lima Centro', email: 'operador1@incidencias.pe', password: 'operador123', role: 'operador', district: 'Lima Centro' },
+  { name: 'Juan Pérez', email: 'juan@gmail.com', password: 'ciudadano123', role: 'ciudadano', district: 'San Isidro' },
 ];
 
 const incidents = [

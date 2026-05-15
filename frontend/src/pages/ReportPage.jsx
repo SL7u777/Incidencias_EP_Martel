@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { incidentService } from '../services/api';
 
 const CATEGORIES = ['bache', 'alumbrado', 'basura', 'seguridad', 'emergencia'];
-const CATEGORY_LABELS = { bache: '🕳️ Bache', alumbrado: '💡 Alumbrado', basura: '🗑️ Basura', seguridad: '🚨 Seguridad', emergencia: '🚒 Emergencia' };
+const CATEGORY_LABELS = { bache: 'Bache', alumbrado: 'Alumbrado', basura: 'Basura', seguridad: 'Seguridad', emergencia: 'Emergencia' };
 const ACCEPTED_TYPES = 'image/*,video/*,audio/*';
 
 function ReportPage() {
@@ -66,11 +66,11 @@ function ReportPage() {
         <div style={{ backgroundColor: 'white', borderRadius: '10px', padding: '24px', marginBottom: '16px', boxShadow: '0 1px 4px rgba(0,0,0,0.07)' }}>
           <h3 style={{ fontSize: '14px', fontWeight: '700', color: '#475569', marginBottom: '16px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Detalles</h3>
           <div style={{ display: 'grid', gap: '14px' }}>
-            <div><label style={lbl}>Título *</label><input name="title" value={form.title} onChange={handleChange} style={inp} placeholder="Ej: Bache peligroso en Av. Principal" required /></div>
-            <div><label style={lbl}>Descripción *</label><textarea name="description" value={form.description} onChange={handleChange} style={{ ...inp, minHeight: '90px', resize: 'vertical' }} placeholder="Describe la incidencia con detalle..." required /></div>
+            <div><label style={lbl}>Título *</label><input name="title" value={form.title} onChange={handleChange} style={inp} placeholder="Ej: Bache profundo en calzada, riesgo para vehículos y motociclistas" required /></div>
+            <div><label style={lbl}>Descripción *</label><textarea name="description" value={form.description} onChange={handleChange} style={{ ...inp, minHeight: '90px', resize: 'vertical' }} placeholder="Ej: Bache de aprox. 40 cm de diámetro y 15 cm de profundidad, presente desde hace 2 semanas. Genera riesgo para motos y bicicletas." required /></div>
             <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '12px' }}>
-              <div><label style={lbl}>Dirección *</label><input name="address" value={form.address} onChange={handleChange} style={inp} placeholder="Av. Arequipa cuadra 10" required /></div>
-              <div><label style={lbl}>Distrito</label><input name="district" value={form.district} onChange={handleChange} style={inp} placeholder="Miraflores" /></div>
+              <div><label style={lbl}>Dirección *</label><input name="address" value={form.address} onChange={handleChange} style={inp} placeholder="Ej: Av. Arequipa 2356, frente al grifo Primax" required /></div>
+              <div><label style={lbl}>Distrito</label><input name="district" value={form.district} onChange={handleChange} style={inp} placeholder="Ej: Miraflores" /></div>
             </div>
           </div>
         </div>
@@ -82,14 +82,13 @@ function ReportPage() {
             {file ? (
               <div>
                 {preview && <img src={preview} alt="preview" style={{ maxHeight: '160px', borderRadius: '6px', marginBottom: '8px' }} />}
-                <div style={{ fontSize: '13px', fontWeight: '600', color: '#10b981' }}>✓ {file.name}</div>
+                <div style={{ fontSize: '13px', fontWeight: '600', color: '#10b981' }}>{file.name}</div>
                 <div style={{ fontSize: '11px', color: '#64748b' }}>{(file.size / 1024 / 1024).toFixed(2)} MB</div>
               </div>
             ) : (
               <div>
-                <div style={{ fontSize: '32px', marginBottom: '8px' }}>📎</div>
-                <div style={{ fontSize: '14px', fontWeight: '600', color: '#475569' }}>Arrastra o haz clic para adjuntar</div>
-                <div style={{ fontSize: '12px', color: '#94a3b8', marginTop: '4px' }}>Imagen, video o audio — máx. 50MB</div>
+                <div style={{ fontSize: '14px', fontWeight: '600', color: '#475569', marginBottom: '4px' }}>Arrastra o haz clic para adjuntar</div>
+                <div style={{ fontSize: '12px', color: '#94a3b8' }}>Imagen, video o audio — máx. 50 MB</div>
               </div>
             )}
           </label>
@@ -98,16 +97,16 @@ function ReportPage() {
         <div style={{ backgroundColor: 'white', borderRadius: '10px', padding: '24px', marginBottom: '16px', boxShadow: '0 1px 4px rgba(0,0,0,0.07)' }}>
           <h3 style={{ fontSize: '14px', fontWeight: '700', color: '#475569', marginBottom: '16px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Tus datos</h3>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-            <div><label style={lbl}>Nombre *</label><input name="reporterName" value={form.reporterName} onChange={handleChange} style={inp} placeholder="Juan Pérez" required /></div>
-            <div><label style={lbl}>Teléfono</label><input name="reporterPhone" value={form.reporterPhone} onChange={handleChange} style={inp} placeholder="+51 999 999 999" /></div>
-            <div style={{ gridColumn: '1/-1' }}><label style={lbl}>Email *</label><input type="email" name="reporterEmail" value={form.reporterEmail} onChange={handleChange} style={inp} placeholder="juan@email.com" required /></div>
+            <div><label style={lbl}>Nombre *</label><input name="reporterName" value={form.reporterName} onChange={handleChange} style={inp} placeholder="Ej: Carlos Ramírez Torres" required /></div>
+            <div><label style={lbl}>Teléfono</label><input name="reporterPhone" value={form.reporterPhone} onChange={handleChange} style={inp} placeholder="Ej: 987 654 321" /></div>
+            <div style={{ gridColumn: '1/-1' }}><label style={lbl}>Email *</label><input type="email" name="reporterEmail" value={form.reporterEmail} onChange={handleChange} style={inp} placeholder="Ej: carlos.ramirez@gmail.com" required /></div>
           </div>
         </div>
 
         {error && <div style={{ backgroundColor: '#fef2f2', color: '#b91c1c', padding: '12px', borderRadius: '6px', marginBottom: '12px', fontSize: '13px' }}>{error}</div>}
 
         <button type="submit" disabled={loading} style={{ width: '100%', padding: '14px', backgroundColor: loading ? '#94a3b8' : '#f59e0b', color: '#0f172a', border: 'none', borderRadius: '7px', fontSize: '15px', fontWeight: '800', cursor: loading ? 'not-allowed' : 'pointer' }}>
-          {loading ? 'Enviando...' : '🚧 Registrar Incidencia'}
+          {loading ? 'Enviando...' : 'Registrar Incidencia'}
         </button>
       </form>
     </div>

@@ -1,4 +1,5 @@
 const ctrl = require('../controllers/incidentController');
+const { requireOperator } = require('../middleware/authMiddleware');
 
 module.exports = async function (fastify) {
   fastify.get(
@@ -43,26 +44,11 @@ module.exports = async function (fastify) {
     {
       schema: {
         tags: ['incidents'],
-        summary: 'Registrar nueva incidencia (US-001) — soporta multipart/form-data con imagen, video o audio',
+        summary: 'Registrar nueva incidencia (US-001) — multipart/form-data con imagen, video o audio',
         consumes: ['multipart/form-data'],
-        body: {
-          type: 'object',
-          required: ['title', 'description', 'category', 'address', 'reporterName', 'reporterEmail'],
-          properties: {
-            title: { type: 'string' },
-            description: { type: 'string' },
-            category: { type: 'string', enum: ['bache', 'alumbrado', 'basura', 'seguridad', 'emergencia'] },
-            address: { type: 'string' },
-            district: { type: 'string' },
-            lat: { type: 'string' },
-            lng: { type: 'string' },
-            reporterName: { type: 'string' },
-            reporterEmail: { type: 'string' },
-            reporterPhone: { type: 'string' },
-            file: { type: 'string', format: 'binary', description: 'Imagen, video o audio (max 50MB)' },
-          },
-        },
+        description: 'Campos requeridos: title, description, category, address, reporterName, reporterEmail. Campo opcional: file (imagen/video/audio, max 50MB)',
       },
+      config: { rawBody: false },
     },
     ctrl.create
   );
@@ -70,10 +56,17 @@ module.exports = async function (fastify) {
   fastify.patch(
     '/:id/status',
     {
+      preHandler: requireOperator,
       schema: {
         tags: ['incidents'],
-        summary: 'Actualizar estado de incidencia (US-003)',
+        summary: 'Actualizar estado de incidencia (US-003) — requiere header x-user-email de operador/admin',
         params: { type: 'object', properties: { id: { type: 'string' } } },
+        headers: {
+          type: 'object',
+          properties: {
+            'x-user-email': { type: 'string', description: 'Email del operador autenticado (requerido)' },
+          },
+        },
         body: {
           type: 'object',
           required: ['status'],
